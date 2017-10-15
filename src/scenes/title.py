@@ -13,15 +13,14 @@ class TitleScene(Scene):
 
         self.deck = []
         x = 112
-        for i in range(1):
+        for i in range(5):
             card = Card((x, 400))
-            x += 144
+            x += 192
             self.deck.append(card)
 
     def get_event(self, event):
-        if event.type == pg.MOUSEBUTTONDOWN:
-            for card in self.deck:
-                card.handle_input(event.pos)
+        for card in self.deck:
+            card.get_event(event)
 
     def update(self, dt):
         for card in self.deck:

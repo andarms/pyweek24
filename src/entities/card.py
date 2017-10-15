@@ -1,12 +1,15 @@
 import random
 import pygame as pg
 
-from ..bootstrap import GFX
+from ..bootstrap import GFX, FONTS
+from .buttons import Button, Clickable
 
 CARD_SIZE = (128, 176)
 
+FONT = pg.font.Font(FONTS['west-england.regular'], 20)
 
-class Card(pg.sprite.Sprite):
+
+class Card(pg.sprite.Sprite, Clickable):
     """docstring for Card"""
 
     def __init__(self, pos):
@@ -24,17 +27,23 @@ class Card(pg.sprite.Sprite):
         self.flip_speed = 4
         self.bounce_speed = 1
 
-    def handle_click(self, mouse_pos):
+        self.message = Button("Hello", (233, 45, 132), (self.rect.right + 10, self.rect.top))
+        self.mouse_over = False
+
+    def get_event(self, event):
+        super(Card, self).get_event(event)
+        self.message.get_event(event)
+
+    def handle_click(self):
         if self.fliping:
             return
-        if self.is_mouse_hover(mouse_pos):
-            self.rotate()
+        self.fliping = True
 
-    def is_mouse_hover(self, mouse_pos):
-        return mouse_pos[0] >= self.rect.x and \
-                mouse_pos[0] <= self.rect.x + self.rect.width and \
-                mouse_pos[1] >= self.rect.top and \
-                mouse_pos[1] <= self.rect.top + self.rect.height
+    # def is_mouse_hover(self, mouse_pos):
+    #     return mouse_pos[0] >= self.rect.x and \
+    #             mouse_pos[0] <= self.rect.x + self.rect.width and \
+    #             mouse_pos[1] >= self.rect.top and \
+    #             mouse_pos[1] <= self.rect.top + self.rect.height
 
     def rotate(self):
         self.face_up = pg.transform.rotate(self.face_up, 90)
@@ -58,4 +67,5 @@ class Card(pg.sprite.Sprite):
             surface.blit(self.face_up, self.rect, self.mask_rect)
         else:
             surface.blit(self.face_down, self.rect, self.mask_rect)
+        self.message.draw(surface)
         # surface.blit(self.image, self.rect)
