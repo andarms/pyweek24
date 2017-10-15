@@ -12,7 +12,7 @@ class TitleScene(Scene):
 
     def __init__(self):
         super(TitleScene, self).__init__()
-        self.f = Field()
+        self.field = Field()
         self.deck = []
         # x = 112
         # for i in range(5):
@@ -22,8 +22,7 @@ class TitleScene(Scene):
 
 
     def get_event(self, event):
-        for card in self.deck:
-            card.get_event(event)
+        self.field.get_event(event)
 
     def update(self, dt):
         for card in self.deck:
@@ -31,7 +30,7 @@ class TitleScene(Scene):
 
     def draw(self, surface):
         surface.blit(GFX['field'], (0, 0))
-
+        self.field.draw(surface)
         # for card in self.deck:
         #     card.draw(surface)
         BATTLE_SPRITES.draw(surface)

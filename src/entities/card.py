@@ -17,7 +17,7 @@ TYPE_COLORS = {
     'WATER': (103, 129, 179),
     'NORMAL': (156, 160, 113)
 }
-CARD_RANKS = [1, 2, 3, 4, 5, 6, 7,8, 9, 10, 'J', 'Q', 'K', 'A']
+CARD_RANKS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
 
 
 def load_cardset():
@@ -25,7 +25,8 @@ def load_cardset():
     for card_type in CARD_TYPE:
         GFX[card_type] = {}
         for rank in CARD_RANKS:
-            GFX[card_type][rank] = GFX['cardset'].subsurface(0, y, CARD_SIZE[0], CARD_SIZE[1]).copy()
+            GFX[card_type][rank] = GFX['cardset'].subsurface(
+                0, y, CARD_SIZE[0], CARD_SIZE[1]).copy()
             r = FONT.render(str(rank), True, TYPE_COLORS[card_type])
             GFX[card_type][rank].blit(r, (8, 8))
             r = pg.transform.rotate(r, 180)
@@ -37,13 +38,13 @@ def load_cardset():
 
 load_cardset()
 
+
 class Card(pg.sprite.Sprite, Clickable):
     """docstring for Card"""
 
     def __init__(self, pos):
         super(Card, self).__init__()
         self.add(BATTLE_SPRITES)
-
 
         self.rank = random.choice(CARD_RANKS)
         self.type = random.choice(CARD_TYPE)
@@ -60,22 +61,24 @@ class Card(pg.sprite.Sprite, Clickable):
         self.fliping = False
         self.flip_speed = 4
         self.bounce_speed = 1
+        self.inx = 0
 
         # self.message = Button("Hello", (233, 45, 132), (self.rect.right + 10, self.rect.top))
         self.mouse_over = False
         # self.message.handle_click = self.test
 
-    def test(self):
-        print("exeternal click handle")
+        self._side = 'PLAYER'
 
     def get_event(self, event):
         super(Card, self).get_event(event)
         # self.message.get_event(event)
 
     def handle_click(self):
-        # if self.fliping:
-        #     return
-        self.faceing_up = not self.faceing_up
+        return self.on_click_handler()
+
+    def on_click_handler(self):
+        '''Maybe not the best way todo it but '''
+        pass
 
     def rotate(self):
         self.face_up = pg.transform.rotate(self.face_up, 90)
@@ -97,3 +100,15 @@ class Card(pg.sprite.Sprite, Clickable):
             self.image = self.face_up
         else:
             self.image = self.face_down
+
+    @property
+    def side(self):
+        return self.side
+
+    @side.setter
+    def side(self, side):
+        if side != self._side and side in ('PLAYER', 'ENEMIE'):
+            self._side = side
+            self.face_up = pg.transform.rotate(self.face_up, 180)
+            self.face_down = pg.transform.rotate(self.face_down, 180)
+            self.image = pg.transform.rotate(self.image, 180)
