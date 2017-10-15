@@ -3,6 +3,7 @@ import pygame as pg
 
 from ..bootstrap import GFX, FONTS
 from .buttons import Button, Clickable
+from ..core.hud import BATTLE_SPRITES
 
 CARD_SIZE = (128, 176)
 
@@ -14,6 +15,7 @@ class Card(pg.sprite.Sprite, Clickable):
 
     def __init__(self, pos):
         super(Card, self).__init__()
+        self.add(BATTLE_SPRITES)
         self.face_up = GFX['testcard']
         self.face_down = pg.Surface(CARD_SIZE)
         self.face_down.fill((100, 100, 100))
@@ -29,21 +31,19 @@ class Card(pg.sprite.Sprite, Clickable):
 
         self.message = Button("Hello", (233, 45, 132), (self.rect.right + 10, self.rect.top))
         self.mouse_over = False
+        self.message.handle_click = self.test
+
+    def test(self):
+        print("exeternal click handle")
 
     def get_event(self, event):
         super(Card, self).get_event(event)
         self.message.get_event(event)
 
     def handle_click(self):
-        if self.fliping:
-            return
-        self.fliping = True
-
-    # def is_mouse_hover(self, mouse_pos):
-    #     return mouse_pos[0] >= self.rect.x and \
-    #             mouse_pos[0] <= self.rect.x + self.rect.width and \
-    #             mouse_pos[1] >= self.rect.top and \
-    #             mouse_pos[1] <= self.rect.top + self.rect.height
+        # if self.fliping:
+        #     return
+        self.faceing_up = not self.faceing_up
 
     def rotate(self):
         self.face_up = pg.transform.rotate(self.face_up, 90)
@@ -61,11 +61,7 @@ class Card(pg.sprite.Sprite, Clickable):
             if self.mask_rect.width == self.rect.width:
                 self.fliping = False
                 self.flip_factor *= -1
-
-    def draw(self, surface):
         if(self.faceing_up):
-            surface.blit(self.face_up, self.rect, self.mask_rect)
+            self.image = self.face_up
         else:
-            surface.blit(self.face_down, self.rect, self.mask_rect)
-        self.message.draw(surface)
-        # surface.blit(self.image, self.rect)
+            self.image = self.face_down

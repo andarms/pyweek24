@@ -1,8 +1,9 @@
 import pygame as pg
 
 from ..bootstrap import GFX
-from .scene import Scene
+from ..core.hud import BATTLE_SPRITES
 from ..entities.card import Card
+from .scene import Scene
 
 
 class TitleScene(Scene):
@@ -29,5 +30,6 @@ class TitleScene(Scene):
     def draw(self, surface):
         surface.blit(GFX['field'], (0, 0))
 
-        for card in self.deck:
-            card.draw(surface)
+        # for card in self.deck:
+        #     card.draw(surface)
+        BATTLE_SPRITES.draw(surface)
