@@ -7,8 +7,35 @@ from ..core.hud import BATTLE_SPRITES
 
 CARD_SIZE = (128, 176)
 
-FONT = pg.font.Font(FONTS['west-england.regular'], 20)
+FONT = pg.font.Font(FONTS['west-england.regular'], 40)
 
+
+CARD_TYPE = ['GRASS', 'FIRE', 'WATER', 'NORMAL']
+TYPE_COLORS = {
+    'GRASS': (113, 185, 81),
+    'FIRE': (225, 119, 51),
+    'WATER': (103, 129, 179),
+    'NORMAL': (156, 160, 113)
+}
+CARD_RANKS = [1, 2, 3, 4, 5, 6, 7,8, 9, 10, 'J', 'Q', 'K', 'A']
+
+
+def load_cardset():
+    x, y = 0, 0
+    for card_type in CARD_TYPE:
+        GFX[card_type] = {}
+        for rank in CARD_RANKS:
+            GFX[card_type][rank] = GFX['cardset'].subsurface(0, y, CARD_SIZE[0], CARD_SIZE[1]).copy()
+            r = FONT.render(str(rank), True, TYPE_COLORS[card_type])
+            GFX[card_type][rank].blit(r, (8, 8))
+            r = pg.transform.rotate(r, 180)
+            rect = r.get_rect()
+            rect.bottom = 168
+            rect.right = 120
+            GFX[card_type][rank].blit(r, rect)
+        y += CARD_SIZE[1]
+
+load_cardset()
 
 class Card(pg.sprite.Sprite, Clickable):
     """docstring for Card"""
@@ -16,10 +43,15 @@ class Card(pg.sprite.Sprite, Clickable):
     def __init__(self, pos):
         super(Card, self).__init__()
         self.add(BATTLE_SPRITES)
-        self.face_up = GFX['testcard']
+
+
+        self.rank = random.choice(CARD_RANKS)
+        self.type = random.choice(CARD_TYPE)
+        self.face_up = GFX[self.type][self.rank]
         self.face_down = pg.Surface(CARD_SIZE)
         self.face_down.fill((100, 100, 100))
-        self.rect = self.face_up.get_rect(topleft=pos)
+        self.image = self.face_up
+        self.rect = self.image.get_rect(topleft=pos)
         self.mask_rect = self.rect.copy()
         self.mask_rect.topleft = 0, 0
         self.flip_factor = -1
@@ -29,16 +61,16 @@ class Card(pg.sprite.Sprite, Clickable):
         self.flip_speed = 4
         self.bounce_speed = 1
 
-        self.message = Button("Hello", (233, 45, 132), (self.rect.right + 10, self.rect.top))
+        # self.message = Button("Hello", (233, 45, 132), (self.rect.right + 10, self.rect.top))
         self.mouse_over = False
-        self.message.handle_click = self.test
+        # self.message.handle_click = self.test
 
     def test(self):
         print("exeternal click handle")
 
     def get_event(self, event):
         super(Card, self).get_event(event)
-        self.message.get_event(event)
+        # self.message.get_event(event)
 
     def handle_click(self):
         # if self.fliping:

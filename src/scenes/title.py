@@ -2,6 +2,7 @@ import pygame as pg
 
 from ..bootstrap import GFX
 from ..core.hud import BATTLE_SPRITES
+from ..entities.field import Field
 from ..entities.card import Card
 from .scene import Scene
 
@@ -11,13 +12,14 @@ class TitleScene(Scene):
 
     def __init__(self):
         super(TitleScene, self).__init__()
-
+        self.f = Field()
         self.deck = []
-        x = 112
-        for i in range(5):
-            card = Card((x, 400))
-            x += 192
-            self.deck.append(card)
+        # x = 112
+        # for i in range(5):
+        #     card = Card((x, 400))
+        #     x += 192
+        #     self.deck.append(card)
+
 
     def get_event(self, event):
         for card in self.deck:
