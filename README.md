@@ -1,2 +1,4 @@
-# pyweek24
-PyWeek 24 Entry
+# PyWeek 24 - They're behind everything
+
+IDEAS: 
+
