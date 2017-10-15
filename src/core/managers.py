@@ -12,7 +12,7 @@ class SceneManager(object):
         self.done = False
         self.clock = pg.time.Clock()
         self.fps = 80.
-        self.show_fps = False
+        self.show_fps = True
         self.current_time = 0.0
         self.keys = pg.key.get_pressed()
         self._scene_dict = {}
@@ -88,3 +88,4 @@ class SceneManager(object):
             if self.show_fps:
                 fps = self.clock.get_fps()
                 with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
+                pg.display.set_caption(with_fps)

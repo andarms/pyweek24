@@ -4,7 +4,7 @@ from .scenes import title
 
 
 def main():
-    manager = SceneManager("Game")
+    manager = SceneManager(bootstrap.ORIGINAL_CAPTION)
     manager.setup_scenes({
         "TITLE": title.TitleScene()
     }, "TITLE")

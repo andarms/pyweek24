@@ -1,4 +1,6 @@
 import pygame as pg
+
+from ..bootstrap import GFX
 from .scene import Scene
 from ..entities.card import Card
 
@@ -8,15 +10,25 @@ class TitleScene(Scene):
 
     def __init__(self):
         super(TitleScene, self).__init__()
-        self.card = Card((300, 200))
+
+        self.deck = []
+        x = 112
+        for i in range(1):
+            card = Card((x, 400))
+            x += 144
+            self.deck.append(card)
 
     def get_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
-            self.card.handle_input(event.pos)
+            for card in self.deck:
+                card.handle_input(event.pos)
 
     def update(self, dt):
-        self.card.update()
+        for card in self.deck:
+            card.update()
 
     def draw(self, surface):
-        surface.fill((255, 255, 255))
-        self.card.draw(surface)
+        surface.blit(GFX['field'], (0, 0))
+
+        for card in self.deck:
+            card.draw(surface)
