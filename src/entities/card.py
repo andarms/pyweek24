@@ -63,11 +63,16 @@ class Card(pg.sprite.Sprite, Clickable):
         self.bounce_speed = 1
         self.inx = 0
 
-        # self.message = Button("Hello", (233, 45, 132), (self.rect.right + 10, self.rect.top))
+
+        self.owner = None
+        
+
         self.mouse_over = False
-        # self.message.handle_click = self.test
 
         self._side = 'PLAYER'
+
+
+        self.pose = "ATTACK"
 
 
     def handle_click(self):

@@ -2,9 +2,10 @@ from random import randint
 import pygame as pg
 
 from ..bootstrap import SCREEN_SIZE, GFX
-from ..core.hud import BATTLE_SPRITES, FloatingLabel
+from ..core.hud import BATTLE_SPRITES, FloatingLabel, StatInfo
 from .buttons import Button
 from .card import Card
+from .trainer import Trainer
 
 
 ENEMIE_FIELD = [(240, 152), (464, 152), (688, 152), (912, 152)]
@@ -41,16 +42,25 @@ class Field(object):
         self.dist_x = 0
         self.dist_y = 0
 
+
+        self.player = Trainer()
+        self.player.info = StatInfo(self.player, (0,0))
+        self.player.info.rect.bottomright = SCREEN_SIZE
+        self.enemie = Trainer()
+        self.enemie.info = StatInfo(self.enemie, (0,0))
+
         self.actives = []
         for inx, pos in enumerate(PLAYER_FIELD):
             card = Card(pos)
             card.inx = inx
+            card.owner = self.player
             card.on_click_handler = self.card_click_handler
             self.actives.append(card)
         for inx, pos in enumerate(ENEMIE_FIELD):
             card = Card(pos)
             card.side = "ENEMIE"
             card.inx = len(self.actives)
+            card.owner = self.enemie
             card.on_click_handler = self.card_click_handler
             self.actives.append(card)
 
@@ -157,12 +167,17 @@ class Field(object):
         defence = CARD_VALUES[target.rank]
 
         damage = (attack - defence) * 100
+        damage = int(damage)
         if damage > 0 : #target damage
             self.actives[target.inx] = None
+            target.owner.lp -= damage
+            target.owner.info.create()
             target.kill()
             FloatingLabel(str(-damage), target.pos)
         else: # self damage
             self.actives[source.inx] = None
+            source.owner.lp -= damage
+            source.owner.info.create()
             source.kill()
             FloatingLabel(str(damage), source.pos)
 
