@@ -52,9 +52,9 @@ class Card(pg.sprite.Sprite, Clickable):
         self.face_down = pg.Surface(CARD_SIZE)
         self.face_down.fill((100, 100, 100))
         self.image = self.face_up
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(center=pos)
         self.mask_rect = self.rect.copy()
-        self.mask_rect.topleft = 0, 0
+        self.mask_rect.center = 0, 0
         self.flip_factor = -1
         self.faceing_up = True
         self.pos = pos
@@ -74,15 +74,15 @@ class Card(pg.sprite.Sprite, Clickable):
         # self.message.get_event(event)
 
     def handle_click(self):
-        return self.on_click_handler()
+        return self.on_click_handler(self.inx)
 
-    def on_click_handler(self):
+    def on_click_handler(self, inx):
         '''Maybe not the best way todo it but '''
-        pass
+        return
 
-    def rotate(self):
-        self.face_up = pg.transform.rotate(self.face_up, 90)
-        self.mask_rect = self.face_up.get_rect()
+    def set_defence_pose(self):
+        self.image = pg.transform.rotate(self.image, 90)
+        self.rect = self.image.get_rect(center=self.pos)
 
     def update(self):
         if self.fliping:

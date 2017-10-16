@@ -52,11 +52,10 @@ class Clickable(object):
 class Button(pg.sprite.Sprite,  Clickable):
     """docstring for Button"""
 
-    def __init__(self, text, color, pos, properties={}):
+    def __init__(self, text, pos, properties={}):
         super(Button, self).__init__()
         self.add(BATTLE_SPRITES)
         self.text = text
-        self.color = color
         self._pos = pos
         self.properties = default_button.copy()
         self.properties.update(properties)
@@ -75,14 +74,12 @@ class Button(pg.sprite.Sprite,  Clickable):
         self.idle_image.fill(self.properties['color'])
         self.hover_image = self.idle_image.copy()
         self.hover_image.fill(self.properties['hover_color'])
+        x = self.properties['padding']
+        y = self.properties['padding'] // 2
+        self.idle_image.blit(self.label, (x, y))
+        self.hover_image.blit(self.label, (x, y))
         self.image = self.idle_image
         self.rect = self.image.get_rect(topleft=self._pos)
-        self.label_rect.x += self.properties['padding']
-        self.label_rect.y += self.properties['padding'] // 2
-
-    def draw(self, surface):
-        surface.blit(self.image, self.rect)
-        surface.blit(self.label, self.label_rect)
 
     def handle_click(self):
         print("click")
