@@ -69,9 +69,6 @@ class Card(pg.sprite.Sprite, Clickable):
 
         self._side = 'PLAYER'
 
-    def get_event(self, event):
-        super(Card, self).get_event(event)
-        # self.message.get_event(event)
 
     def handle_click(self):
         return self.on_click_handler(self.inx)

@@ -10,8 +10,9 @@ default_button = {
     'padding': 20,
     'color':  (0, 0, 0),
     'hover_color': (55, 55, 55),
-    'disable': (100, 100, 100)
+    'disable': (100, 100, 100),
 }
+
 
 class Clickable(object):
     """docstring for Clickable"""
@@ -19,22 +20,28 @@ class Clickable(object):
     def __init__(self):
         self.mouse_over = False
 
-    def get_event(self, event):
+    def get_event(self, event, offset=(0, 0)):
         mouse_pos = pg.mouse.get_pos()
         if event.type == pg.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(mouse_pos):
+            if self.collide_point(mouse_pos, offset):
                 if(event.button == 1):
                     self.handle_click()
                 if(event.button == 3):
                     self.handle_right_click()
         elif event.type == pg.MOUSEMOTION:
-            mouse_over = self.rect.collidepoint(mouse_pos)
+            mouse_over = self.collide_point(mouse_pos, offset)
             if mouse_over != self.mouse_over:
                 if mouse_over:
                     self.handle_mouse_enter()
                 else:
                     self.handle_mouse_leave()
                 self.mouse_over = mouse_over
+
+    def collide_point(self, mouse_pos, offset):
+        return mouse_pos[0] >= self.rect.x + int(offset[0]) and \
+            mouse_pos[0] < self.rect.right + int(offset[0]) and \
+            mouse_pos[1] > self.rect.y + offset[1] and \
+            mouse_pos[1] < self.rect.bottom + offset[1]
 
     def handle_click(self):
         pass
