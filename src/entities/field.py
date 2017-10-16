@@ -2,10 +2,10 @@ from random import randint
 import pygame as pg
 
 from ..bootstrap import SCREEN_SIZE, GFX
-from ..core.hud import BATTLE_SPRITES
+from ..core.hud import BATTLE_SPRITES, FloatingLabel
 from .buttons import Button
 from .card import Card
-from .trainer import Trainer
+
 
 ENEMIE_FIELD = [(240, 152), (464, 152), (688, 152), (912, 152)]
 PLAYER_FIELD = [(112, 488), (336, 488), (560, 488), (784, 488)]
@@ -60,10 +60,7 @@ class Field(object):
 
         self.phase = "START"
 
-        self.player = Trainer()
-        self.enemie = Trainer()
-        print(self.player.lp, self.player.attack, self.player.defence)
-        print(self.enemie.lp, self.enemie.attack, self.enemie.defence)
+        
 
         self.ui_buttons = []
         self.attack_phase_button = Button('Test', (16, SCREEN_SIZE[1] - 48))
@@ -72,7 +69,8 @@ class Field(object):
 
     def get_event(self, event):
         for card in self.actives:
-            card.get_event(event, (self.rect.x, self.rect.y))
+            if card:
+                card.get_event(event, (self.rect.x, self.rect.y))
         for button in self.action_buttons:
             button.get_event(event, (self.rect.x, self.rect.y))
         for button in self.ui_buttons:
@@ -157,7 +155,18 @@ class Field(object):
         effectiveness = self.get_effectiveness(source, target)
         attack = CARD_VALUES[source.rank] * effectiveness
         defence = CARD_VALUES[target.rank]
-        print("damge:", attack - defence)
+
+        damage = (attack - defence) * 100
+        if damage > 0 : #target damage
+            self.actives[target.inx] = None
+            target.kill()
+            FloatingLabel(str(-damage), target.pos)
+        else: # self damage
+            self.actives[source.inx] = None
+            source.kill()
+            FloatingLabel(str(damage), source.pos)
+
+        self.phase = "ATTACK"
 
     def get_effectiveness(self, source, target):
         if source.type == "GRASS" and target.type == "GRASS":

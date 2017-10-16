@@ -21,4 +21,4 @@ class Trainer(object):
             elif aux == 2:
                 self.attack += aumont
             else:
-                self.defence = aumont
+                self.defence += aumont
